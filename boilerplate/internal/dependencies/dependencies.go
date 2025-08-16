@@ -4,6 +4,7 @@ import (
 	"database/sql"
 
 	"github.com/nats-io/nats.go"
+	"github.com/sirupsen/logrus"
 	"github.com/teewat888/go-booking/boilerplate/internal/config"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
@@ -17,6 +18,9 @@ type Dependencies struct {
 }
 
 func InitDependencies(cfg *config.Config) *Dependencies {
+	if cfg.Env == "prod" {
+		logrus.SetFormatter(&logrus.JSONFormatter{})
+	}
 	db := initDBConnection(cfg)
 	nats := initNatsConnection(cfg)
 

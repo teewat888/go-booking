@@ -1,18 +1,40 @@
 package main
 
 import (
-	"fmt"
+	"os"
+	"os/signal"
 
+	"github.com/sirupsen/logrus"
 	"github.com/teewat888/go-booking/boilerplate/internal/config"
 	"github.com/teewat888/go-booking/boilerplate/internal/dependencies"
+	httpServer "github.com/teewat888/go-booking/boilerplate/internal/http"
 )
 
 func main() {
-	fmt.Println("Hello, World!")
 
 	cfg := config.FromEnv()
 
 	deps := dependencies.InitDependencies(&cfg)
 
-	fmt.Printf("%+v", deps)
+	logrus.WithField("service_id", cfg.ServiceId).Info("Starting the service")
+
+	srv := httpServer.New(deps)
+
+	srv.Configure()
+
+	osSignal := make(chan os.Signal, 1)
+	signal.Notify(osSignal, os.Interrupt)
+
+	go func() {
+		if err := srv.Start(); err != nil {
+			logrus.WithError(err).Fatal("Cannot start the server")
+		}
+	}()
+
+	<-osSignal
+
+	if err := srv.Close(); err != nil {
+		logrus.WithError(err).Fatal("Cannot close the server correctly")
+	}
+
 }
