@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/teewat888/go-booking/boilerplate/internal/config"
+	"github.com/teewat888/go-booking/boilerplate/internal/dependencies"
 )
 
 func main() {
@@ -11,5 +12,7 @@ func main() {
 
 	cfg := config.FromEnv()
 
-	fmt.Printf("%+v", cfg)
+	deps := dependencies.InitDependencies(&cfg)
+
+	fmt.Printf("%+v", deps)
 }
