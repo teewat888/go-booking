@@ -8,6 +8,7 @@ import (
 	"github.com/teewat888/go-booking/boilerplate/internal/config"
 	"github.com/teewat888/go-booking/boilerplate/internal/dependencies"
 	httpServer "github.com/teewat888/go-booking/boilerplate/internal/http"
+	"github.com/teewat888/go-booking/msgoutils"
 )
 
 func main() {
@@ -24,6 +25,9 @@ func main() {
 
 	osSignal := make(chan os.Signal, 1)
 	signal.Notify(osSignal, os.Interrupt)
+
+	jwtsrv := msgoutils.NewJWTService("sss")
+	jwtsrv.ValidateToken("sss")
 
 	go func() {
 		if err := srv.Start(); err != nil {

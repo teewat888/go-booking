@@ -1,4 +1,4 @@
-module github.com/teewat888/go-booking/msgo-utils
+module github.com/teewat888/go-booking/msgoutils
 
 go 1.23.4
 
